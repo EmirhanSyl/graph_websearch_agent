@@ -165,13 +165,16 @@ def create_graph(
             review = "No review"
 
         if review != "No review":
-            if isinstance(review, HumanMessage):
+            if isinstance(review, dict):
+                next_agent = review.get("next_agent")
+            elif hasattr(review, "next_agent"):
+                next_agent = review.next_agent
+            elif isinstance(review, HumanMessage):
                 review_content = review.content
+                review_data = json.loads(review_content)
+                next_agent = review_data["next_agent"]
             else:
-                review_content = review
-
-            review_data = json.loads(review_content)
-            next_agent = review_data["next_agent"]
+                next_agent = "end"
         else:
             next_agent = "end"
 
