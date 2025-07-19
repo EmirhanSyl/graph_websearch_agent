@@ -1,8 +1,6 @@
-# import json
-# import yaml
-# import os
+from openai.resources.containers.files import content
 from termcolor import colored
-from langchain_core.messages import HumanMessage
+from langchain_core.messages import HumanMessage, SystemMessage
 from models.openai_models import get_open_ai, get_open_ai_structured
 from models.agent_schemas import (
     PlannerResponse,
@@ -22,7 +20,7 @@ from states.state import AgentGraphState
 
 
 class Agent:
-    def __init__(self, state: AgentGraphState, model=None, temperature=0):
+    def __init__(self, state: AgentGraphState, model="qwen3:4b", temperature=0):
         self.state = state
         self.model = model
         self.temperature = temperature
@@ -50,12 +48,13 @@ class PlannerAgent(Agent):
         )
 
         messages = [
-            {"role": "system", "content": planner_prompt},
-            {"role": "user", "content": f"research question: {research_question}"},
+            SystemMessage(content=planner_prompt),
+            HumanMessage(content=f"research question: {research_question}"),
         ]
-
+        print(messages)
         llm = self.get_llm(model_class=PlannerResponse)
         ai_msg = llm.invoke(messages)
+        print(ai_msg)
         response = ai_msg.model_dump_json()
 
         self.update_state("planner_response", HumanMessage(content=response))

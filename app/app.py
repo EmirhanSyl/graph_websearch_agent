@@ -1,13 +1,13 @@
 from agent_graph.graph import create_graph, compile_workflow
 from models.agent_schemas import RouterResponse
-from models.openai_models import get_open_ai_structured
+from models.openai_models import get_open_ai_structured, get_open_ai
 
 # server = 'ollama'
 # model = 'llama3:instruct'
 # model_endpoint = None
 
 server = 'openai'
-model = 'gemma3:4b'
+model = 'qwen3:4b'
 model_endpoint = None
 
 # server = 'vllm'
@@ -25,33 +25,32 @@ print ("Graph and workflow created.")
 
 
 if __name__ == "__main__":
-    print(get_open_ai_structured(RouterResponse).invoke("Next agent is planner."))
-    # verbose = False
-    #
-    # while True:
-    #     query = input("Please enter your research question: ")
-    #     if query.lower() == "exit":
-    #         break
-    #
-    #     dict_inputs = {"research_question": query}
-    #     # thread = {"configurable": {"thread_id": "4"}}
-    #     limit = {"recursion_limit": iterations}
-    #
-    #     # for event in workflow.stream(
-    #     #     dict_inputs, thread, limit, stream_mode="values"
-    #     #     ):
-    #     #     if verbose:
-    #     #         print("\nState Dictionary:", event)
-    #     #     else:
-    #     #         print("\n")
-    #
-    #     for event in workflow.stream(
-    #         dict_inputs, limit
-    #         ):
-    #         if verbose:
-    #             print("\nState Dictionary:", event)
-    #         else:
-    #             print("\n")
+    verbose = False
+
+    while True:
+        query = input("Please enter your research question: ")
+        if query.lower() == "exit":
+            break
+
+        dict_inputs = {"research_question": query}
+        # thread = {"configurable": {"thread_id": "4"}}
+        limit = {"recursion_limit": iterations}
+
+        # for event in workflow.stream(
+        #     dict_inputs, thread, limit, stream_mode="values"
+        #     ):
+        #     if verbose:
+        #         print("\nState Dictionary:", event)
+        #     else:
+        #         print("\n")
+
+        for event in workflow.stream(
+            dict_inputs, limit
+            ):
+            if verbose:
+                print("\nState Dictionary:", event)
+            else:
+                print("\n")
 
 
 
