@@ -1,11 +1,13 @@
 from agent_graph.graph import create_graph, compile_workflow
+from models.agent_schemas import RouterResponse
+from models.openai_models import get_open_ai_structured
 
 # server = 'ollama'
 # model = 'llama3:instruct'
 # model_endpoint = None
 
 server = 'openai'
-model = 'gpt-4o'
+model = 'gemma3:4b'
 model_endpoint = None
 
 # server = 'vllm'
@@ -23,33 +25,33 @@ print ("Graph and workflow created.")
 
 
 if __name__ == "__main__":
-
-    verbose = False
-
-    while True:
-        query = input("Please enter your research question: ")
-        if query.lower() == "exit":
-            break
-
-        dict_inputs = {"research_question": query}
-        # thread = {"configurable": {"thread_id": "4"}}
-        limit = {"recursion_limit": iterations}
-
-        # for event in workflow.stream(
-        #     dict_inputs, thread, limit, stream_mode="values"
-        #     ):
-        #     if verbose:
-        #         print("\nState Dictionary:", event)
-        #     else:
-        #         print("\n")
-
-        for event in workflow.stream(
-            dict_inputs, limit
-            ):
-            if verbose:
-                print("\nState Dictionary:", event)
-            else:
-                print("\n")
+    print(get_open_ai_structured(RouterResponse).invoke("Next agent is planner."))
+    # verbose = False
+    #
+    # while True:
+    #     query = input("Please enter your research question: ")
+    #     if query.lower() == "exit":
+    #         break
+    #
+    #     dict_inputs = {"research_question": query}
+    #     # thread = {"configurable": {"thread_id": "4"}}
+    #     limit = {"recursion_limit": iterations}
+    #
+    #     # for event in workflow.stream(
+    #     #     dict_inputs, thread, limit, stream_mode="values"
+    #     #     ):
+    #     #     if verbose:
+    #     #         print("\nState Dictionary:", event)
+    #     #     else:
+    #     #         print("\n")
+    #
+    #     for event in workflow.stream(
+    #         dict_inputs, limit
+    #         ):
+    #         if verbose:
+    #             print("\nState Dictionary:", event)
+    #         else:
+    #             print("\n")
 
 
 

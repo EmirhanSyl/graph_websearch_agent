@@ -25,7 +25,7 @@ def get_google_serper(state:AgentGraphState, plan):
     plan_data = json.loads(plan_data)
     search = plan_data.get("search_term")
 
-    serper = GoogleSerperAPIWrapper()
+    serper = GoogleSerperAPIWrapper(serper_api_key="a00a73c3ac748ff73ffd073637b6dc2b01b4ded9")
     try:
         results = serper.results(search)
         if "organic" in results:
