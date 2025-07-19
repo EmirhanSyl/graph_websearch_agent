@@ -1,4 +1,3 @@
-import json 
 import requests
 from bs4 import BeautifulSoup
 from states.state import AgentGraphState
@@ -10,14 +9,14 @@ def is_garbled(text):
     return non_ascii_count > len(text) * 0.3
 
 def scrape_website(state: AgentGraphState, research=None):
-    research_data = research().content
-    research_data = json.loads(research_data)
-    # research_data = ast.literal_eval(research_data)
+    research_data = research()
 
-    try:
-        url = research_data["selected_page_url"]
-    except KeyError as e:
-        url = research_data["error"]
+    if isinstance(research_data, dict):
+        url = research_data.get("selected_page_url") or research_data.get("error")
+    else:
+        url = getattr(research_data, "selected_page_url", None)
+        if url is None:
+            url = getattr(research_data, "error", None)
 
     try:
         response = requests.get(url)

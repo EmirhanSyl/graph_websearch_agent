@@ -35,7 +35,12 @@ class Agent:
         return get_open_ai(model=self.model, temperature=self.temperature)
 
     def update_state(self, key, value):
-        self.state = {**self.state, key: value}
+        """Append the value to the list stored under ``key`` in ``self.state``."""
+        current = self.state.get(key, [])
+        if not isinstance(current, list):
+            current = [current]
+        current.append(value)
+        self.state = {**self.state, key: current}
 
 
 class PlannerAgent(Agent):
@@ -54,10 +59,9 @@ class PlannerAgent(Agent):
         print(messages)
         llm = self.get_llm(model_class=PlannerResponse)
         ai_msg = llm.invoke(messages)
-        print(ai_msg)
-        response = ai_msg.model_dump_json()
+        response = ai_msg.model_dump()
 
-        self.update_state("planner_response", HumanMessage(content=response))
+        self.update_state("planner_response", response)
         print(colored(f"Planner 👩🏿‍💻: {response}", "cyan"))
         return self.state
 
@@ -95,10 +99,10 @@ class SelectorAgent(Agent):
 
         llm = self.get_llm(model_class=SelectorResponse)
         ai_msg = llm.invoke(messages)
-        response = ai_msg.model_dump_json()
+        response = ai_msg.model_dump()
 
         print(colored(f"selector 🧑🏼‍💻: {response}", "green"))
-        self.update_state("selector_response", HumanMessage(content=response))
+        self.update_state("selector_response", response)
         return self.state
 
 
@@ -170,10 +174,10 @@ class ReviewerAgent(Agent):
 
         llm = self.get_llm(model_class=ReviewerResponse)
         ai_msg = llm.invoke(messages)
-        response = ai_msg.model_dump_json()
+        response = ai_msg.model_dump()
 
         print(colored(f"Reviewer 👩🏽‍⚖️: {response}", "magenta"))
-        self.update_state("reviewer_response", HumanMessage(content=response))
+        self.update_state("reviewer_response", response)
         return self.state
 
 
@@ -193,10 +197,10 @@ class RouterAgent(Agent):
 
         llm = self.get_llm(model_class=RouterResponse)
         ai_msg = llm.invoke(messages)
-        response = ai_msg.model_dump_json()
+        response = ai_msg.model_dump()
 
         print(colored(f"Router 🧭: {response}", "blue"))
-        self.update_state("router_response", HumanMessage(content=response))
+        self.update_state("router_response", response)
         return self.state
 
 

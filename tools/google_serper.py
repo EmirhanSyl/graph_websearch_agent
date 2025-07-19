@@ -1,5 +1,4 @@
 import os
-import json
 from langchain_community.utilities import GoogleSerperAPIWrapper
 from utils.helper_functions import load_config
 from states.state import AgentGraphState
@@ -21,9 +20,8 @@ def format_results(organic_results):
 def get_google_serper(state:AgentGraphState, plan):
     load_config(config_path)
 
-    plan_data = plan().content
-    plan_data = json.loads(plan_data)
-    search = plan_data.get("search_term")
+    plan_data = plan()
+    search = plan_data.get("search_term") if isinstance(plan_data, dict) else getattr(plan_data, "search_term", "")
 
     serper = GoogleSerperAPIWrapper(serper_api_key="a00a73c3ac748ff73ffd073637b6dc2b01b4ded9")
     try:

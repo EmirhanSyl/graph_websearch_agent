@@ -35,14 +35,13 @@ def get_current_utc_datetime():
 
 # for checking if an attribute of the state dict has content.
 def check_for_content(var):
-    if var:
-        try:
-            var = var.content
-            return var.content
-        except:
-            return var
-    else:
-        var
+    """Return the underlying content if ``var`` is a message-like object."""
+    if var is None:
+        return var
+    try:
+        return var.content
+    except AttributeError:
+        return var
 
 
 # def custom_print(message, stdscr=None):

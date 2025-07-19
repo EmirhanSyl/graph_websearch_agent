@@ -33,9 +33,14 @@ class ChatWorkflow:
             if "router" in event.keys():
                 state = event["router"]
                 reviewer_state = state['router_response']
-                # print("\n\nREVIEWER_STATE:", reviewer_state)
-                reviewer_state_dict = json.loads(reviewer_state)
-                next_agent_value = reviewer_state_dict["next_agent"]
+                # handle both dict and dataclass representations
+                if isinstance(reviewer_state, dict):
+                    next_agent_value = reviewer_state.get("next_agent")
+                elif hasattr(reviewer_state, "next_agent"):
+                    next_agent_value = reviewer_state.next_agent
+                else:
+                    reviewer_state_dict = json.loads(reviewer_state)
+                    next_agent_value = reviewer_state_dict["next_agent"]
                 if isinstance(next_agent_value, list):
                     next_agent = next_agent_value[-1]
                 else:
