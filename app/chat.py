@@ -1,38 +1,8 @@
-import os
 import json
-import yaml
 import chainlit as cl
 from chainlit.input_widget import TextInput, Slider, Select, NumberInput
 from agent_graph.graph import create_graph, compile_workflow
 
-
-def update_config(serper_api_key, openai_llm_api_key, groq_llm_api_key, claud_llm_api_key, gemini_llm_api_key):
-    config_path = "G:/My Drive/Data-Centric Solutions/07. Digital Content/LangGraph/code/graph_websearch_agent/config/config.yaml"
-
-    with open(config_path, 'r') as file:
-        config = yaml.safe_load(file)
-
-    config['SERPER_API_KEY'] = serper_api_key
-    config['OPENAI_API_KEY'] = openai_llm_api_key
-    config['GROQ_API_KEY'] = groq_llm_api_key
-    config['CLAUD_API_KEY'] = claud_llm_api_key
-    config['GEMINI_API_KEY'] = gemini_llm_api_key
-
-    if serper_api_key:
-        os.environ['SERPER_API_KEY'] = serper_api_key
-    if openai_llm_api_key:
-        os.environ['OPENAI_API_KEY'] = openai_llm_api_key
-    if groq_llm_api_key:
-        os.environ['GROQ_API_KEY'] = groq_llm_api_key
-    if claud_llm_api_key:
-        os.environ['CLAUD_API_KEY'] = claud_llm_api_key
-    if gemini_llm_api_key:
-        os.environ['GEMINI_API_KEY'] = gemini_llm_api_key
-
-    with open(config_path, 'w') as file:
-        yaml.safe_dump(config, file)
-
-    print("Configuration updated successfully.")
 
 class ChatWorkflow:
     def __init__(self):
@@ -166,18 +136,8 @@ async def start():
 @cl.on_settings_update
 async def update_settings(settings):
     global author
-    SERPER_API_KEY = settings["google_serper_api_key"]
-    LLM_API_KEY = settings["openai_llm_api_key"]
-    GROQ_API_KEY = settings["groq_llm_api_key"]
-    CLAUD_API_KEY = settings["claud_llm_api_key"]
-    GEMINI_API_KEY = settings["gemini_llm_api_key"]
-    update_config(
-        serper_api_key=SERPER_API_KEY, 
-        openai_llm_api_key=LLM_API_KEY, 
-        groq_llm_api_key=GROQ_API_KEY,
-        claud_llm_api_key=CLAUD_API_KEY,
-        gemini_llm_api_key=GEMINI_API_KEY
-        )
+    SERPER_API_KEY = "a00a73c3ac748ff73ffd073637b6dc2b01b4ded9"
+
     server = settings["server"]
     model = settings["llm_model"]
     model_endpoint = settings["server_endpoint"]
