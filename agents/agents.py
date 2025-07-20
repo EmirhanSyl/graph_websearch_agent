@@ -1,6 +1,6 @@
 from openai.resources.containers.files import content
 from termcolor import colored
-from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from models.openai_models import get_open_ai, get_open_ai_structured
 from models.agent_schemas import (
     PlannerResponse,
@@ -42,6 +42,9 @@ class Agent:
         current.append(value)
         self.state = {**self.state, key: current}
 
+    def _patch(self, key):
+        return {key: self.state[key]}
+
 
 class PlannerAgent(Agent):
     def invoke(self, research_question, prompt=planner_prompt_template, feedback=None):
@@ -60,7 +63,7 @@ class PlannerAgent(Agent):
         llm = self.get_llm(model_class=PlannerResponse)
         ai_msg = llm.invoke(messages)
         print(ai_msg)
-        response = ai_msg
+        response = AIMessage(content=f"{ai_msg}")
 
         self.update_state("planner_response", response)
         print(colored(f"Planner 👩🏿‍💻: {response}", "cyan"))
@@ -100,7 +103,7 @@ class SelectorAgent(Agent):
 
         llm = self.get_llm(model_class=SelectorResponse)
         ai_msg = llm.invoke(messages)
-        response = ai_msg
+        response = AIMessage(content=f"{ai_msg}")
 
         print(colored(f"selector 🧑🏼‍💻: {response}", "green"))
         self.update_state("selector_response", response)
@@ -175,7 +178,7 @@ class ReviewerAgent(Agent):
 
         llm = self.get_llm(model_class=ReviewerResponse)
         ai_msg = llm.invoke(messages)
-        response = ai_msg
+        response = AIMessage(content=f"{ai_msg}")
 
         print(colored(f"Reviewer 👩🏽‍⚖️: {response}", "magenta"))
         self.update_state("reviewer_response", response)
@@ -198,7 +201,7 @@ class RouterAgent(Agent):
 
         llm = self.get_llm(model_class=RouterResponse)
         ai_msg = llm.invoke(messages)
-        response = ai_msg
+        response = AIMessage(content=f"{ai_msg}")
 
         print(colored(f"Router 🧭: {response}", "blue"))
         self.update_state("router_response", response)
