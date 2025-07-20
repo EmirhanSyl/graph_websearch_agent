@@ -21,5 +21,6 @@ def get_open_ai_structured(
         temperature=temperature,
         openai_api_key="dummy",
         base_url=BASE_URL,
-    ).with_structured_output(response_model)
+
+    ).with_structured_output(schema=response_model, method="json_mode")
     return llm
