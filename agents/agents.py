@@ -1,4 +1,3 @@
-from openai.resources.containers.files import content
 from termcolor import colored
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from models.openai_models import get_open_ai, get_open_ai_structured

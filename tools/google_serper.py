@@ -1,13 +1,7 @@
-import os
 from langchain_community.utilities import GoogleSerperAPIWrapper
-from utils.helper_functions import load_config
 from states.state import AgentGraphState
 
-config_path = os.path.join(os.path.dirname(__file__), '..', 'config', 'config.yaml')
-
-
 def format_results(organic_results):
-
         result_strings = []
         for result in organic_results:
             title = result.get('title', 'No Title')
@@ -17,9 +11,8 @@ def format_results(organic_results):
         
         return '\n'.join(result_strings)
 
-def get_google_serper(state:AgentGraphState, plan):
-    load_config(config_path)
 
+def get_google_serper(state:AgentGraphState, plan):
     plan_data = plan()
     search = plan_data.get("search_term") if isinstance(plan_data, dict) else getattr(plan_data, "search_term", "")
 
