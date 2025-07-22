@@ -7,3 +7,5 @@
 /states/__pycache__
 /tools/__pycache__
 /utils/__pycache__
+*.pyc
+/app/__pycache__
